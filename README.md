@@ -117,4 +117,6 @@ If automatically generating a new repository does not work, follow these steps i
 Q: The management requested a new feature where in the fictional e-commerce app must have a "featured products" section.
 How would you go about implementing this feature in the backend?
 
-A: _Put your answer here_
+A: If I am going to implement a featured products section here in this app, the first thing that I will do is to modify the product table wherein I will add another column named isFeatured whereas the column datatype is smallint that will contain boolean values 1 or 0.
+The second step that I will make is to create another API for the featured post section wherein I will get all the data in the product table that has the value 1 on the isFeatured column.
+After that, my final step is to return the data that I retrieved as a response from the request of fetching featured products.
