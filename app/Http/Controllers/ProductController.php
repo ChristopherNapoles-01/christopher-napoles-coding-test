@@ -56,7 +56,7 @@ class ProductController extends Controller
     public function createProduct(Request $request){
         try{
             $validator = Validator::make($request->data,[
-                'name' => 'required',
+                'name' => 'required|max:255',
                 'description' => 'required',
                 'price' => 'required | numeric'
 
@@ -66,6 +66,33 @@ class ProductController extends Controller
             }
             $createdProduct = Product::create($request->data);
             $response = response(['isSuccess' => true,'createdProduct' => $createdProduct],200);
+            return $response;
+        }catch(\Exception $e){
+            return response(['isSuccess' => false,'errorMessage' => $e->getMessage()]);
+        }
+    }
+
+
+       /**
+    * method updateProduct
+    * @param request
+    * return success message if updating of product is success and error message when there is an error
+    * CPN - 04/15/2023
+    */
+    public function updateProduct(Request $request){
+        try{
+            $id = $request->productId ?? '';
+            $validator = Validator::make($request->data,[
+                'name' => 'required|max:255',
+                'description' => 'required',
+                'price' => 'required | numeric'
+
+            ]);
+            if($validator->fails()){
+                return response(['isSuccess' => false, 'errorMessage' => $validator->messages()]);
+            }
+            $updatedProduct = Product::findOrFail($id)->update($request->data);
+            $response = response(['isSuccess' => true,'updatedProduct' => $updatedProduct],200);
             return $response;
         }catch(\Exception $e){
             return response(['isSuccess' => false,'errorMessage' => $e->getMessage()]);
