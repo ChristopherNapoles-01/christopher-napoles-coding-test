@@ -1,0 +1,77 @@
+Instructions for setting up the fictional e-commerce system
+--Tools
+    To test the fictional e-commerce system, you will need any api testing tools, it can be installable or 
+    browser based. I suggest to use postman, you can install it or use it via browser.
+
+--Setting Up
+1. Access the repository:
+https://github.com/ChristopherNapoles-01/christopher-napoles-coding-test
+
+2. After accessing the repo, download or clone it.
+3. After downloading and cloning it open add/create .env file to the root folder. You can do this by copying the
+.env.example on your root folder and modify the "DB_DATABASE", set it to fictional_ecommerce.
+If your database connection username is not "root" modify the "DB_USERNAME", replace "root" with your database username.
+After that if your database connection has a password, modify "DB_PASSWORD", set it to your database password,
+if none then leave it blank.
+
+4. Open the folder on your terminal and kindly run composer install.
+
+5. When the installation is done you can run the migration to create the database. Though I also added the
+database file in the database folder so that you can just import it on your database servers. 
+It already contains some data.
+    to run the migration you can simply run:
+    php artisan migrate
+    or to run a specific file:
+    php artisan migrate --path=database\migrations\2023_04_15_050743_create_product_table.php.     
+
+6. After successfully running the migration you can now seed some data to the product table.
+   To do that kindly run:
+   php artisan db:seed --class=ProductTableSeeder.
+7. After completing the preceeding steps kindly run php artisan serve.
+   Now you can already test the provided apis.
+
+--Testing guides
+
+1. Product Lists
+    - Kindly Access localhost:8000/api/get-products
+    or if you want to paginate just add a queryParam page to the link.
+    Example: localhost:8000/api/get-products?page=2
+
+2. Product Details
+    - In order to get a specific product details you will need to access the product-details route and
+    set the productId.
+    example: localhost:8000/api/product-details?productId=10
+    note: If the given productId is not found you will receive a message.
+
+3. Create Product
+    - In Order to create a product you must create an object named data with properties name, description and price.
+    the data is the representation of the product. If you are using postman you can set it up on the "Body" area.
+    example:
+    in JSON format - {
+        "data":{
+            "name":"Product 1",
+            "description": "First Product",
+            "price": 20.50
+        }
+    }
+    After creating a data object you can now access this route: localhost:8000/api/create-product
+
+4. Update Product
+    - In Order to update a product you must know first what is the id of the product that you want to update.
+    After that create an object named data with properties name, description and price. If you are using postman you can set it up on the "Body" area.
+      example:
+        in JSON format - {
+            "data":{
+                "name":"Product 1",
+                "description": "Best Product",
+                "price": 20.50
+            }
+        }
+    After you created this object you can now access the route together with the productId in order to update a product.
+    example: localhost:8000/api/update-product?productId=10.
+
+ 5. Delete Product
+    - In order to delete a product you must first know the id of the product that you want to delete then
+    you can already access the delete product route and setup the productId as a queryParam.
+    example:
+        localhost:8000/api/delete-product?productId=13
