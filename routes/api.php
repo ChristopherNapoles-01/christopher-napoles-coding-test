@@ -19,5 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('get-products',[ProductController::class,'getProducts']);
-Route::get('product-details',[ProductController::class,'getProductDetails']);
+//fictional e-commerce routes
+Route::get('/get-products',[ProductController::class,'getProducts']);
+Route::get('/product-details',[ProductController::class,'getProductDetails']);
+Route::post('/create-product',[ProductController::class,'createProduct']);
