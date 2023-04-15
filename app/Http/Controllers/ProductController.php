@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Services\ProductService;
@@ -57,7 +57,7 @@ class ProductController extends Controller
         try{
             $id = $request->productId ?? '';
             $productDetails = $this->productService->getProductDetailsService($id);
-
+            Cache::put('productDetails',$productDetails,5);
             $response = response(['productDetails' => $productDetails],200);
             return $response;
         }catch(\Exception $e){
