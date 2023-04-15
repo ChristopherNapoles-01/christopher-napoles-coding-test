@@ -4,14 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Services\ProductService;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 
 
 
 
 class ProductController extends Controller
 {   
+    protected $productService;
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
     /**
     * method getProducts
     * @param request
@@ -20,7 +28,18 @@ class ProductController extends Controller
     */
     public function getProducts(Request $request){
         try{
-            $products = DB::table('product')->paginate(5);
+            $productsToPaginate = $this->productService->getProductsService();
+            $collection = new Collection($productsToPaginate);
+            $page = request('page', $request->page ?? 1);
+      
+            $paginator = new LengthAwarePaginator(
+                $collection->forPage($page, 5),
+                $collection->count(),
+                5,
+                $page,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
+            $products = $paginator->items();
             $response = response(['products' => $products],200);
             return $response;
         }catch(\Exception $e){
@@ -37,7 +56,7 @@ class ProductController extends Controller
     public function getProductDetails(Request $request){
         try{
             $id = $request->productId ?? '';
-            $productDetails = Product::findOrFail($id) ?? '';
+            $productDetails = $this->productService->getProductDetailsService($id);
 
             $response = response(['productDetails' => $productDetails],200);
             return $response;
@@ -64,7 +83,7 @@ class ProductController extends Controller
             if($validator->fails()){
                 return response(['isSuccess' => false, 'errorMessage' => $validator->messages()]);
             }
-            $createdProduct = Product::create($request->data);
+            $createdProduct = $this->productService->saveProductService($request->data);
             $response = response(['isSuccess' => true,'createdProduct' => $createdProduct],200);
             return $response;
         }catch(\Exception $e){
@@ -91,7 +110,8 @@ class ProductController extends Controller
             if($validator->fails()){
                 return response(['isSuccess' => false, 'errorMessage' => $validator->messages()]);
             }
-            $updatedProduct = Product::findOrFail($id)->update($request->data);
+        
+            $updatedProduct = $this->productService->updateProductService($id,$request->data);
             $response = response(['isSuccess' => $updatedProduct],200);
             return $response;
         }catch(\Exception $e){
@@ -108,7 +128,7 @@ class ProductController extends Controller
     public function deleteProduct(Request $request){
         try{
             $id = $request->productId ?? '';
-            $deletedProduct = Product::findOrFail($id)->delete();
+            $deletedProduct = $this->productService->deleteProductService($id);
             $response = response(['isSuccess'=>$deletedProduct]);
             return $response;
         }catch(\Exception $e){
