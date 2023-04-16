@@ -1,6 +1,6 @@
 Instructions for setting up the fictional e-commerce system
 --Tools
-    To test the fictional e-commerce system, you will need any api testing tools, it can be installable or 
+    To manually test the fictional e-commerce system, you will need any api testing tools, it can be installable or 
     browser based. I suggest to use postman, you can install it or use it via browser.
 
 --Setting Up
