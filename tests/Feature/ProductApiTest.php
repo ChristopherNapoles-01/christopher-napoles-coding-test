@@ -76,8 +76,9 @@ class ProductApiTest extends TestCase
             'description' => 'Updated Data',
             'price' => 90.9
         ];
-      
+        
         $data = http_build_query(['data' => $data]);
+        //update latest data
         $response = $this->put("/api/update-product?productId=$tableId->id&".$data);
         $responseData = json_decode($response->getContent(), true);
         $responseData['isSuccess'] == true ? $response->assertStatus(200) : $response->assertStatus(500);
@@ -99,10 +100,12 @@ class ProductApiTest extends TestCase
         ];
               
         $data = http_build_query(['data' => $data]);
+
+        //create a data to be deleted
         $this->post("/api/create-product".$data);
         $tableId = DB::table('product')->select('id')->orderBy('id','DESC')->first();
 
-      
+        //delete the recently created data
         $response = $this->delete("/api/delete-product?productId=$tableId->id");
         $responseData = json_decode($response->getContent(), true);
         $responseData['isSuccess'] == true ? $response->assertStatus(200) : $response->assertStatus(500);
