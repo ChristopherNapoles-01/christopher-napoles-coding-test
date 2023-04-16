@@ -75,3 +75,7 @@ It already contains some data.
     you can already access the delete product route and setup the productId as a queryParam.
     example:
         localhost:8000/api/delete-product?productId=13
+
+--Automated Testing
+ Run : "php artisan test --filter test_function_name" - to run a specific test.
+       "php artisan test" - to run all the tests.
